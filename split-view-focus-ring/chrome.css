@@ -1,0 +1,160 @@
+/**
+ * Zen Mod: Split View Focus Ring
+ * Makes the active split-view pane unmistakable: ring color presets or a
+ * custom CSS color, width, opacity, optional glow, optional dimming of the
+ * inactive panes, and an animated focus change.
+ *
+ * Zen's default ring (src/zen/split-view/zen-split-view.css) is 2px in a color
+ * derived from the theme accent, which is why it tends to blend in:
+ *   --zen-active-split-outline-color: light-dark(hsl(from var(--zen-primary-color) h s calc(l - 20)),
+ *                                                var(--button-background-color-primary));
+ *
+ * Preference plumbing (verified in ZenMods.mjs / zen-settings.js, Zen 1.22.1b):
+ *   checkbox -> bool pref   -> @media (-moz-pref("name"))
+ *   dropdown -> string pref -> @media (-moz-pref("name", "value"))
+ *   string   -> inline CSS variable on :root, dots replaced by hyphens
+ * Every base rule below carries the default, so the file also works as a plain
+ * userChrome.css before any mod.splitfocus.* pref exists.
+ */
+
+/* ------------------------------------------------------------------ */
+/* Ring color                                                          */
+/* ------------------------------------------------------------------ */
+:root {
+  /* Default "auto": the complementary hue of the accent color, saturated and
+     pushed to mid lightness, then nudged darker on light / lighter on dark. */
+  --sfr-base: hsl(from var(--zen-primary-color) calc(h + 180) max(s, 75) 55);
+  --sfr-color: color-mix(in oklab, var(--sfr-base) 85%, light-dark(black, white));
+
+  --sfr-width: 3px;
+  --sfr-alpha: 100%;
+  --sfr-dim: 0.7;
+
+  /* Final ring color with opacity applied. */
+  --sfr-ring: color-mix(in srgb, var(--sfr-color) var(--sfr-alpha), transparent);
+}
+
+@media (-moz-pref("mod.splitfocus.color", "accent")) {
+  :root {
+    --sfr-base: hsl(from var(--zen-primary-color) h 100 55);
+  }
+}
+@media (-moz-pref("mod.splitfocus.color", "mono")) {
+  :root { --sfr-color: light-dark(#000000, #ffffff); }
+}
+@media (-moz-pref("mod.splitfocus.color", "red")) {
+  :root { --sfr-color: light-dark(#d93025, #ff6b6b); }
+}
+@media (-moz-pref("mod.splitfocus.color", "orange")) {
+  :root { --sfr-color: light-dark(#e8710a, #ffa657); }
+}
+@media (-moz-pref("mod.splitfocus.color", "yellow")) {
+  :root { --sfr-color: light-dark(#b8860b, #ffd43b); }
+}
+@media (-moz-pref("mod.splitfocus.color", "green")) {
+  :root { --sfr-color: light-dark(#1e8e3e, #56d364); }
+}
+@media (-moz-pref("mod.splitfocus.color", "cyan")) {
+  :root { --sfr-color: light-dark(#0b8aa8, #4dd0e1); }
+}
+@media (-moz-pref("mod.splitfocus.color", "blue")) {
+  :root { --sfr-color: light-dark(#1a73e8, #58a6ff); }
+}
+@media (-moz-pref("mod.splitfocus.color", "purple")) {
+  :root { --sfr-color: light-dark(#7c3aed, #b083ff); }
+}
+@media (-moz-pref("mod.splitfocus.color", "pink")) {
+  :root { --sfr-color: light-dark(#d6336c, #ff7eb6); }
+}
+@media (-moz-pref("mod.splitfocus.color", "custom")) {
+  :root {
+    /* Any CSS color typed into the "Custom color" field. Falls back if empty. */
+    --sfr-color: var(--mod-splitfocus-custom_color, light-dark(#d93025, #ff6b6b));
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Ring width / opacity                                                */
+/* ------------------------------------------------------------------ */
+@media (-moz-pref("mod.splitfocus.width", "2")) { :root { --sfr-width: 2px; } }
+@media (-moz-pref("mod.splitfocus.width", "4")) { :root { --sfr-width: 4px; } }
+@media (-moz-pref("mod.splitfocus.width", "6")) { :root { --sfr-width: 6px; } }
+
+@media (-moz-pref("mod.splitfocus.opacity", "80")) { :root { --sfr-alpha: 80%; } }
+@media (-moz-pref("mod.splitfocus.opacity", "60")) { :root { --sfr-alpha: 60%; } }
+@media (-moz-pref("mod.splitfocus.opacity", "40")) { :root { --sfr-alpha: 40%; } }
+
+/* ------------------------------------------------------------------ */
+/* The ring                                                            */
+/* ------------------------------------------------------------------ */
+
+/* Keep Zen's split-view overlay (drag handle / unsplit buttons) in the ring color. */
+#tabbrowser-tabpanels[zen-split-view="true"] > .browserSidebarContainer[zen-split="true"] {
+  --zen-active-split-outline-color: var(--sfr-color) !important;
+}
+
+/* Zen loads the mods sheet with StyleOrigin::User (ZenStyleSheetCache.cpp), so a
+   user-origin !important already beats Zen's author-origin !important. The
+   selector is still one step more specific than Zen's, as a belt-and-braces measure. */
+:root:not([inDOMFullscreen="true"])
+  #tabbrowser-tabpanels[zen-split-view="true"]
+  > .browserSidebarContainer[zen-split="true"].deck-selected:not(.zen-glance-overlay) {
+  outline: var(--sfr-width) solid var(--sfr-ring) !important;
+  outline-offset: 0 !important;
+}
+
+/* Inactive panes get an invisible outline of the same width so outline-color can
+   animate between the two states (outline-style itself is not animatable). */
+:root:not([inDOMFullscreen="true"])
+  #tabbrowser-tabpanels[zen-split-view="true"]
+  > .browserSidebarContainer[zen-split="true"]:not(.deck-selected) {
+  outline: var(--sfr-width) solid transparent !important;
+  outline-offset: 0 !important;
+}
+
+/* ------------------------------------------------------------------ */
+/* Glow (checkbox, default off)                                        */
+/* ------------------------------------------------------------------ */
+@media (-moz-pref("mod.splitfocus.glow")) {
+  :root:not([inDOMFullscreen="true"])
+    #tabbrowser-tabpanels[zen-split-view="true"]
+    > .browserSidebarContainer[zen-split="true"].deck-selected:not(.zen-glance-overlay) {
+    box-shadow: 0 0 0 calc(var(--sfr-width) + 4px)
+      color-mix(in srgb, var(--sfr-ring) 35%, transparent) !important;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Dim inactive panes (checkbox, default off) + opacity dropdown       */
+/* ------------------------------------------------------------------ */
+@media (-moz-pref("mod.splitfocus.dim_opacity", "0.85")) { :root { --sfr-dim: 0.85; } }
+@media (-moz-pref("mod.splitfocus.dim_opacity", "0.5"))  { :root { --sfr-dim: 0.5; } }
+
+@media (-moz-pref("mod.splitfocus.dim")) {
+  /* Zen already transitions browser opacity (0.2s), so this fades smoothly. */
+  :root:not([inDOMFullscreen="true"])
+    #tabbrowser-tabpanels[zen-split-view="true"]
+    > .browserSidebarContainer[zen-split="true"]:not(.deck-selected) browser {
+    opacity: var(--sfr-dim) !important;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Animate focus change (checkbox, default on)                         */
+/* ------------------------------------------------------------------ */
+/* Mirrors Zen's own condition so the inset transition is preserved and nothing
+   animates while a pane is being resized. */
+#tabbrowser-tabpanels[zen-split-view="true"]:not(.zen-split-view-no-transition):not([zen-split-resizing])
+  > .browserSidebarContainer[zen-split="true"] {
+  transition:
+    inset 0.09s ease-out,
+    outline-color 120ms ease-out,
+    box-shadow 120ms ease-out !important;
+}
+
+@media not (-moz-pref("mod.splitfocus.animate")) {
+  #tabbrowser-tabpanels[zen-split-view="true"]:not(.zen-split-view-no-transition):not([zen-split-resizing])
+    > .browserSidebarContainer[zen-split="true"] {
+    transition: inset 0.09s ease-out !important;
+  }
+}

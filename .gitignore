@@ -1,0 +1,9 @@
+# Private hand-off material — never commit (contains internal context and the
+# pre-filled store submission form).
+handoff/
+CLAUDE.local.md
+
+# Scratch
+*.bak
+*.bak.*
+.DS_Store

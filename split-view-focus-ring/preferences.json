@@ -1,0 +1,86 @@
+[
+  {
+    "property": "mod.splitfocus.color",
+    "label": "Ring color",
+    "type": "dropdown",
+    "defaultValue": "auto",
+    "placeholder": "Auto",
+    "options": [
+      { "label": "Auto — complementary to accent", "value": "auto" },
+      { "label": "Accent, boosted", "value": "accent" },
+      { "label": "Black / White (max contrast)", "value": "mono" },
+      { "label": "Red", "value": "red" },
+      { "label": "Orange", "value": "orange" },
+      { "label": "Yellow", "value": "yellow" },
+      { "label": "Green", "value": "green" },
+      { "label": "Cyan", "value": "cyan" },
+      { "label": "Blue", "value": "blue" },
+      { "label": "Purple", "value": "purple" },
+      { "label": "Pink", "value": "pink" },
+      { "label": "Custom (use the field below)", "value": "custom" }
+    ]
+  },
+  {
+    "property": "mod.splitfocus.custom_color",
+    "label": "Custom color — any CSS color, used when Ring color is Custom",
+    "type": "string",
+    "defaultValue": "",
+    "placeholder": "#ff5c5c or light-dark(#d93025, #ff6b6b)"
+  },
+  {
+    "property": "mod.splitfocus.width",
+    "label": "Ring width",
+    "type": "dropdown",
+    "defaultValue": "3",
+    "placeholder": "3 px",
+    "options": [
+      { "label": "2 px", "value": "2" },
+      { "label": "3 px", "value": "3" },
+      { "label": "4 px", "value": "4" },
+      { "label": "6 px", "value": "6" }
+    ]
+  },
+  {
+    "property": "mod.splitfocus.opacity",
+    "label": "Ring opacity",
+    "type": "dropdown",
+    "defaultValue": "100",
+    "placeholder": "100 %",
+    "options": [
+      { "label": "100 %", "value": "100" },
+      { "label": "80 %", "value": "80" },
+      { "label": "60 %", "value": "60" },
+      { "label": "40 %", "value": "40" }
+    ]
+  },
+  {
+    "property": "mod.splitfocus.glow",
+    "label": "Add a soft glow around the active pane",
+    "type": "checkbox",
+    "defaultValue": false
+  },
+  {
+    "property": "mod.splitfocus.dim",
+    "label": "Dim inactive panes",
+    "type": "checkbox",
+    "defaultValue": false
+  },
+  {
+    "property": "mod.splitfocus.dim_opacity",
+    "label": "Inactive pane opacity (when dimming is on)",
+    "type": "dropdown",
+    "defaultValue": "0.7",
+    "placeholder": "70 %",
+    "options": [
+      { "label": "85 %", "value": "0.85" },
+      { "label": "70 %", "value": "0.7" },
+      { "label": "50 %", "value": "0.5" }
+    ]
+  },
+  {
+    "property": "mod.splitfocus.animate",
+    "label": "Animate focus change",
+    "type": "checkbox",
+    "defaultValue": true
+  }
+]
