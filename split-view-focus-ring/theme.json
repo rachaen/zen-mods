@@ -1,0 +1,19 @@
+{
+  "id": "split-view-focus-ring",
+  "name": "Split View Focus Ring",
+  "description": "Make the active Split View pane obvious: ring color presets or custom, width, opacity, glow, dim.",
+  "homepage": "https://github.com/rachaen/zen-mods/tree/main/split-view-focus-ring",
+  "author": "rachaen",
+  "version": "1.0.0",
+  "image": "https://raw.githubusercontent.com/rachaen/zen-mods/main/split-view-focus-ring/image.png",
+  "readme": "https://raw.githubusercontent.com/rachaen/zen-mods/main/split-view-focus-ring/readme.md",
+  "style": {
+    "chrome": "chrome.css"
+  },
+  "preferences": "preferences.json",
+  "tags": ["split-view", "accessibility", "chrome"],
+  "fork": ["zen"],
+  "ai": "yes",
+  "createdAt": "2026-10-13",
+  "updatedAt": "2026-10-13"
+}
