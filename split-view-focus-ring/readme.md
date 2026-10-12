@@ -1,5 +1,7 @@
 # Split View Focus Ring
 
+![Split View Focus Ring](https://raw.githubusercontent.com/rachaen/zen-mods/main/split-view-focus-ring/image.png)
+
 Zen highlights the active pane in Split View with a 2 px outline whose color is
 derived from your **accent color**. With many themes that ring is nearly
 invisible, so you click a pane thinking it is focused, hit *Back*, and the
