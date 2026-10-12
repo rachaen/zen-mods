@@ -8,7 +8,14 @@ invisible, so you click a pane thinking it is focused, hit *Back*, and the
 *other* pane navigates.
 
 This mod replaces the ring with one you can actually see, and lets you tune it
-from the Zen Mods settings page.
+from the mod's settings.
+
+## Install
+
+1. Install [Sine](https://github.com/CosmoCreeper/Sine), the mod manager for Zen.
+2. Find **Split View Focus Ring** in Sine's marketplace, or add it from this
+   folder's URL: `https://github.com/rachaen/zen-mods/tree/main/split-view-focus-ring`.
+3. Change the options below in Sine's settings for the mod.
 
 ## Options
 
@@ -43,11 +50,11 @@ custom color arrives as the CSS variable `--mod-splitfocus-custom_color`.
 Verified against Zen 1.22.1b; the relevant selectors are unchanged on the
 current `dev` branch.
 
-## Testing locally without the store
+## Using it without a mod manager
 
 1. Copy `chrome.css` to `<profile>/chrome/userChrome.css`.
 2. In `about:config` set `toolkit.legacyUserProfileCustomizations.stylesheets` to `true`.
-3. Restart Zen. Without the store, the `mod.splitfocus.*` preferences do not
+3. Restart Zen. Without a mod manager, the `mod.splitfocus.*` preferences do not
    exist, so every option runs at its default (Auto color, 3 px, 100 %, animated).
    To try another value locally, create the pref by hand in `about:config`,
    e.g. string `mod.splitfocus.color` = `red`, then restart.
